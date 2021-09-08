@@ -5,7 +5,7 @@ XMLHTTP.onreadystatechange = function() {
         var output = this.responseText;
         output = JSON.parse(output);
         var sub_number = output.items[0].statistics["subscriberCount"];
-        var left = 100000 - sub_number
+        var left = 1000 - sub_number
         document.getElementById("sub_count").innerHTML = left;
     }
 
