@@ -17,6 +17,7 @@ html {
   
   .msg {
     font-family: "Pacifico", cursive;
+    src: url("../sitefonts/Pacifico.ttf") format('truetype');
     font-size: 8vw;
     display: flex;
     flex-direction: column;
