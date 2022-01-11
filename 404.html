@@ -39,18 +39,8 @@
 </main>
 <script>
   // clearInterval(1);
-  var count=0;
-  setInterval(function(){
-    document.querySelector("h1").style.top=(Math.floor(Math.random()*200)-100)+"px";
-    document.querySelector("h1").style.left=(Math.floor(Math.random()*200)-100)+"px";
-    document.querySelector("h1").style.transform="rotate("+(Math.floor(Math.random()*360))+"deg)";
-    var height=Math.floor(Math.random()*400)+100;
-    document.querySelector("h1").style.height=height+"px";
-    document.querySelector("h1").style.fontSize=height+"px";
-    count++;
-    var titles=["Wrong Way","u faled","Having trouble?","stop making up urls","that was your fault"];
-    if (count%20===0) document.querySelector("title").innerHTML=titles[Math.floor(Math.random()*titles.length)];
-  }, 100);
+  var titles=["Wrong Way","u faled","Having trouble?","stop making up urls","that was your fault"];
+        if (count%20===0) document.querySelector("title").innerHTML=titles[Math.floor(Math.random()*titles.length)];
 </script>
 
 </body>
