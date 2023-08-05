@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+   <script>
+      function detectColorScheme() {
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              return 'dark';
+          } else {
+              return 'light';
+          }
+      }
+
+      // Function to update HTML tag with data-bs-theme attribute
+      function updateThemeAttribute() {
+          const colorScheme = detectColorScheme();
+          const htmlTag = document.getElementsByTagName('html')[0];
+          htmlTag.setAttribute('data-bs-theme', colorScheme);
+      }
+
+      // Call the function on page load
+      window.onload = updateThemeAttribute;
+  </script>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Ez way to calculate your percent">
+    <title>Percentage Calculator</title>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Are you sure?</h1>
+          </div>
+          <div class="modal-body"> Do you really want to reset this form? </div>
+          <div class="modal-footer"><button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button><button type="button" class="btn btn-danger" id="resetConfirmButton" data-bs-dismiss="modal">Yes</button></div>
+        </div>
+      </div>
+    </div>
+    <section class="py-5 text-center container">
+      <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <h1 class="fw-light">Percentage Calculator</h1>
+          <p class="lead text-muted">Calculates your percent</p>
+        </div>
+      </div>
+    </section>
+    <div class="album py-1">
+      <div class="container" id="marks-container">
+        <div class="input-group mb-3"><input type="number" class="form-control earned" placeholder="Marks" aria-label="Marks"><span class="input-group-text">out of</span><input type="number" class="form-control total" placeholder="Overall Marks" aria-label="Overall Marks"></div>
+      </div>
+      <div class="container">
+         <button type="button" class="btn btn-primary" id="addButton">Add +</button>
+         <button type="button" class="btn btn-success" id="checkButton">Check Percentage</button>
+         <button type="button" class="btn btn-danger" id="resetFormButton">Reset</button>
+      </div>
+      <div class="container py-3" id="final" style="display: none">
+        <div class="alert alert-success" role="alert">
+          <p id="currentPercentageText"></p>
+          <div class="progress" role="progressbar">
+            <div class="progress-bar progress-bar-striped bg-success" style="width: 0%" id="percentageMarks"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="text-muted py-5">
+      <div class="container">
+        <p class="mb-1">Made with the help of <a href="https://getbootstrap.com/">BootStrap</a> and <a href="https://openai.com/blog/chatgpt">ChatGPT</a>.</p>
+      </div>
+    </footer>
+    <script src="./js/bootstrap.min.js"></script>
+    <script>
+      const addButton = document.getElementById('addButton');
+      const resetButton = document.getElementById('resetFormButton');
+      const resetConfirmButton = document.getElementById('resetConfirmButton');
+      const checkButton = document.getElementById('checkButton');
+      const marksContainer = document.getElementById('marks-container');
+      const finalContainer = document.getElementById('final');
+      const progress = document.querySelector('.progress-bar');
+      const currentPercentageText = document.getElementById('currentPercentageText');
+      const percentageMarks = document.getElementById('percentageMarks');
+      document.addEventListener('DOMContentLoaded', function() {
+        resetConfirmButton.addEventListener('click', function() {
+          marksContainer.innerHTML = `<div class="input-group mb-3">
+            <input type="number" class="form-control earned" placeholder="Marks" aria-label="Marks">
+            <span class="input-group-text">out of</span>
+            <input type="number" class="form-control total" placeholder="Overall Marks" aria-label="Overall Marks">
+            </div>`;
+          marksContainer.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+          finalContainer.style = "display: none";
+        })
+        resetButton.addEventListener('click', function() {
+          const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+          modal.show();
+        })
+        addButton.addEventListener('click', function() {
+          const inputGroup = document.createElement('div');
+          inputGroup.classList.add('input-group', 'mb-3');
+          // Get the value of the previous "Overall Marks" input, if available
+          const previousInputGroup = marksContainer.lastElementChild;
+          const previousTotalInput = previousInputGroup.querySelector('.total');
+          const previousTotalValue = previousTotalInput ? previousTotalInput.value : '';
+          inputGroup.innerHTML = `
+         <input type="number" class="form-control earned" placeholder="Marks" aria-label="Marks">
+         <span class="input-group-text">out of</span>
+         <input type="number" class="form-control total" placeholder="Overall Marks" aria-label="Overall Marks" value="${previousTotalValue}">
+         `;
+          marksContainer.appendChild(inputGroup);
+          // Scroll the new input group into view
+          inputGroup.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        });
+      });
+
+      function easeOutCubic(t) {
+        return -(Math.cos(Math.PI * t) - 1) / 2;
+      }
+
+      function getAlertClass(percentage) {
+        if (percentage >= 0 && percentage <= 25) {
+          return 'alert alert-danger';
+        } else if (percentage > 25 && percentage <= 75) {
+          return 'alert alert-warning';
+        } else {
+          return 'alert alert-success';
+        }
+      }
+
+      function getProgressBarClass(percentage) {
+        if (percentage >= 0 && percentage <= 25) {
+          return 'bg-danger';
+        } else if (percentage > 25 && percentage <= 75) {
+          return 'bg-warning';
+        } else {
+          return 'bg-success';
+        }
+      }
+      checkButton.addEventListener('click', function() {
+        finalContainer.style = "display: none";
+        const inputGroups = marksContainer.querySelectorAll('.input-group');
+        inputGroups.forEach(inputGroup => {
+          inputGroup.classList.remove('was-validated');
+          const earnedInput = inputGroup.querySelector('.earned');
+          const totalInput = inputGroup.querySelector('.total');
+          if (earnedInput) {
+            earnedInput.classList.remove('is-invalid', 'is-valid'); // Remove both classes
+          }
+          if (totalInput) {
+            totalInput.classList.remove('is-invalid', 'is-valid');
+          }
+        });
+        const hasErrors = [];
+        inputGroups.forEach((inputGroup, index) => {
+          const earnedInput = inputGroup.querySelector('.earned');
+          const totalInput = inputGroup.querySelector('.total');
+          if (earnedInput && totalInput) {
+            const marks = parseFloat(earnedInput.value);
+            const totalMarks = parseFloat(totalInput.value);
+            const isMarksInvalid = (marks > totalMarks || isNaN(marks));
+            const isTotalMarksInvalid = isNaN(totalMarks) || totalMarks <= 0;
+            if (isMarksInvalid) {
+              hasErrors.push(index);
+              earnedInput.classList.add('is-invalid');
+            } else {
+              earnedInput.classList.remove('is-invalid');
+              earnedInput.classList.add('is-valid'); // Add 'is-valid' class for green tick
+            }
+            if (isTotalMarksInvalid) {
+              hasErrors.push(index);
+              totalInput.classList.add('is-invalid');
+            } else {
+              totalInput.classList.remove('is-invalid');
+              totalInput.classList.add('is-valid');
+            }
+          }
+        });
+        if (hasErrors.length > 0) {
+          // Scroll to the first error and stop further processing
+          inputGroups[hasErrors[0]].scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+          return;
+        }
+        progress.style.width = '0%';
+        progress.setAttribute('aria-valuenow', '0');
+        finalContainer.style = "display: block";
+        finalContainer.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+        finalContainer.innerHTML = `
+      <div class="alert alert-success" role="alert">
+         <p id="currentPercentageText"></p><div class="progress" role="progressbar" aria-label="Percentage Progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped bg-success" style="width: 0%" id="percentageMarks"></div>
+         </div>
+      </div>
+   `;
+        let totalMarksSum = 0;
+        let earnedMarksSum = 0;
+        inputGroups.forEach(inputGroup => {
+          const earnedInput = inputGroup.querySelector('.earned');
+          const totalInput = inputGroup.querySelector('.total');
+          if (earnedInput && totalInput) {
+            const marks = parseFloat(earnedInput.value);
+            const totalMarks = parseFloat(totalInput.value);
+            totalMarksSum += totalMarks;
+            earnedMarksSum += marks;
+          }
+        });
+        if (earnedMarksSum === 0) {
+          finalContainer.innerHTML = `
+         <div class="alert alert-danger" role="alert">
+            Cannot calculate percentage: Earned marks total is 0.
+         </div>
+      `;
+          return;
+        }
+        const percentage = (earnedMarksSum / totalMarksSum) * 100;
+        const formattedPercentage = percentage.toFixed(2);
+        // Smoothly update the percent text and progress bar with sine ease-in-out animation
+        let currentTime = 0;
+        const duration = 1500; // Animation duration in milliseconds
+        const animate = () => {
+          currentTime += 16; // Roughly 60 frames per second
+          const easeValue = easeOutCubic(Math.min(1, currentTime / duration));
+          const currentPercentage = easeValue * percentage;
+          progress.style.width = currentPercentage + '%';
+          progress.setAttribute('aria-valuenow', currentPercentage);
+          let alertClass, progressBarClass;
+          if (currentPercentage >= 0 && currentPercentage <= 35) {
+            alertClass = 'alert alert-danger';
+            progressBarClass = 'bg-danger';
+          } else if (currentPercentage > 35 && currentPercentage <= 75) {
+            alertClass = 'alert alert-warning';
+            progressBarClass = 'bg-warning';
+          } else {
+            alertClass = 'alert alert-success';
+            progressBarClass = 'bg-success';
+          }
+          finalContainer.innerHTML = `
+      <div class="${alertClass}" role="alert">
+         <p id="currentPercentageText">You scored ${currentPercentage.toFixed(2)}%</p>
+         <div class="progress" role="progressbar" aria-label="Percentage Progress" aria-valuenow="${currentPercentage.toFixed(2)}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar ${progressBarClass}" style="width: ${currentPercentage.toFixed(2)}%"></div>
+         </div>
+      </div>
+   `;
+          if (currentTime < duration) {
+            requestAnimationFrame(animate);
+          }
+        };
+        requestAnimationFrame(animate);
+      });
+    </script>
+  </body>
+</html>
