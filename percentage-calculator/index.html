@@ -24,7 +24,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Ez way to calculate your percent">
     <title>Percentage Calculator</title>
-    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -100,7 +100,11 @@
     </section>
     <div class="album py-1">
       <div class="container" id="marks-container">
-        <div class="input-group mb-3"><input type="number" class="form-control earned" placeholder="Marks" aria-label="Marks"><span class="input-group-text">out of</span><input type="number" class="form-control total" placeholder="Overall Marks" aria-label="Overall Marks"></div>
+        <div class="input-group mb-3">
+          <input type="number" class="form-control earned" placeholder="Marks" aria-label="Marks">
+          <span class="input-group-text">out of</span>
+          <input type="number" class="form-control total" placeholder="Overall Marks" aria-label="Overall Marks">
+        </div>
       </div>
       <div class="container">
          <button type="button" class="btn btn-primary" id="addButton">Add +</button>
@@ -121,7 +125,7 @@
         <p class="mb-1">Made with the help of <a href="https://getbootstrap.com/">BootStrap</a> and <a href="https://openai.com/blog/chatgpt">ChatGPT</a>.</p>
       </div>
     </footer>
-    <script src="./js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
     <script>
       const addButton = document.getElementById('addButton');
       const resetButton = document.getElementById('resetFormButton');
@@ -135,10 +139,10 @@
       document.addEventListener('DOMContentLoaded', function() {
         resetConfirmButton.addEventListener('click', function() {
           marksContainer.innerHTML = `<div class="input-group mb-3">
-            <input type="number" class="form-control earned" placeholder="Marks" aria-label="Marks">
-            <span class="input-group-text">out of</span>
-            <input type="number" class="form-control total" placeholder="Overall Marks" aria-label="Overall Marks">
-            </div>`;
+          <input type="number" class="form-control earned" placeholder="Marks" aria-label="Marks">
+          <span class="input-group-text">out of</span>
+          <input type="number" class="form-control total" placeholder="Overall Marks" aria-label="Overall Marks">
+        </div>`;
           marksContainer.scrollIntoView({
             behavior: 'smooth',
             block: 'center'
@@ -160,13 +164,22 @@
          <input type="number" class="form-control earned" placeholder="Marks" aria-label="Marks">
          <span class="input-group-text">out of</span>
          <input type="number" class="form-control total" placeholder="Overall Marks" aria-label="Overall Marks" value="${previousTotalValue}">
+         <button class="btn btn-danger delete-button">×</button>
          `;
+         
           marksContainer.appendChild(inputGroup);
+
+          const deleteButton = inputGroup.querySelector('.delete-button');
+    deleteButton.addEventListener('click', function() {
+      marksContainer.removeChild(inputGroup); // Remove the input group
+    });
           // Scroll the new input group into view
           inputGroup.scrollIntoView({
             behavior: 'smooth',
             block: 'center'
           });
+
+          inputGroup.querySelector('.earned').focus();
         });
       });
 
