@@ -1,15 +1,15 @@
-const cacheName = "v1";
+const cacheName = "v1.1";
 
 const appShellFiles = [
   //service worker essentials
   "./service-worker.js",
   "./js/s.w.js",
   //home page and bootstrap
-  "./index.html",
+  "./",
   "./js/bootstrap.min.js",
   "./css/bootstrap.min.css",
   //percentage calculator
-  "./percentage-calculator/index.html"
+  "./percentage-calculator/"
 
 ];
 
