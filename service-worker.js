@@ -1,16 +1,24 @@
 const cacheName = "v1";
 
 const appShellFiles = [
+  //service worker essentials
   "./service-worker.js",
-  "./js/s.w.js"
+  "./js/s.w.js",
+  //home page and bootstrap
+  "./index.html",
+  "./js/bootstrap.min.js",
+  "./css/bootstrap.min.css",
+  //percentage calculator
+  "./percentage-calculator/index.html"
+
 ];
 
 self.addEventListener("install", (e) => {
-  console.log("[Service Worker] Install");
+  console.log("[Service Worker INFO] Install");
   e.waitUntil(
     (async () => {
       const cache = await caches.open(cacheName);
-      console.log("[Service Worker] Caching all: app shell and content");
+      console.log("[Service Worker INFO] Caching all...");
       await cache.addAll(appShellFiles);
     })(),
   );
@@ -20,12 +28,13 @@ self.addEventListener("fetch", (e) => {
   e.respondWith(
     (async () => {
       const r = await caches.match(e.request);
-      console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
+      console.log(`[Service Worker INFO] Fetching cached resource: ${e.request.url}`);
       if (r) {
         return r;
-      }else{
-        console.log(`[Service Worker] Resource at ${e.request.url} isn't set for caching.`);
       }
+      const response = await fetch(e.request);
+      console.log(`[Service Worker INFO] Fetching fresh resource: ${e.request.url}`);
+      return response;
     })(),
   );
 });
@@ -38,6 +47,7 @@ self.addEventListener("activate", (e) => {
           if (key === cacheName) {
             return;
           }
+          console.log(`[Service Worker INFO] Expired Cache Deleted`);
           return caches.delete(key);
         }),
       );
