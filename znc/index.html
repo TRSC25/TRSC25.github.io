@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Zoom Name Change</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link id="theme" rel="stylesheet" href="./dark.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row justify-content-center">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+                      <a class="navbar-brand" href="./index.html">Zoom Name Change</a>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                          <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="./credits.html">Credits</a>
+                          </li>
+                        </div>
+                    </div>
+                </nav>
+                <div class="col-md-10">
+                    <br>
+                    <h1>Zoom Name Change</h1>
+                    <small class="form-text text-muted">Don't try to mess this up buy putting random values.</small><br>
+                    <div class="form-group">
+                        <label for="meeting-id">Meeting ID</label>
+                        <input class="form-control" id="meeting-id" maxlength="12">
+                        <small class="form-text text-muted">This field accept all formats including "XXX-XXX-XXXX", "XXX XXX XXXX" or "XXXXXXXXXX"</small>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="meeting-password">Password</label>
+                        <input class="form-control" id="meeting-password">
+                    </div><br>
+                    <div class="form-group">
+                        <label for="meeting-name">Name when Joining</label>
+                        <input class="form-control" id="meeting-name">
+                        <small class="form-text text-muted">This is your name</small>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="meeting-name">Don't have the meeting link and passcode?</label>
+                        <input class="form-control" id="URLL">
+                        <small class="form-text text-muted">Enter the meeting invite link here!</small>
+                    </div><br>
+                    <button class="btn btn-primary" id="btn-generate">Generate</button>
+                    
+                    <div class="my-3">Link:- <br><a id="meeting-url-a"></a></div><br>
+                    <small class="form-text text-muted">Make sure you leave the meeting before joining via this link</small><br>               
+                </div>
+            </div>
+        </div>
+        <script src="./jquery-3.4.1.min.js"></script>
+        <script>
+            const BASE = ""
+            $(document).ready(() => {
+                $("#meeting-id").val("")
+                $("#meeting-password").val("")
+                $("#meeting-name").val("Name")
+                $("#btn-generate").click(() => {
+                    const id = $("#meeting-id").val().replace(/\D/g,'')
+                    const pwd = $("#meeting-password").val()
+                    const name = $("#meeting-name").val().trim()
+                    const result = `zoommtg://zoom.us/join?action=join&confno=${id}&pwd=${pwd}&uname=${encodeURIComponent(name)}`
+                    $("#meeting-url").val(result)
+                    $("#meeting-url-a").attr("href", result)
+                    $("#meeting-url-a").text(result)         
+                })
+            })  
+        </script>
+        <script>
+            "use strict"
+            let txt = document.getElementById("URLL")
+            let mtg = null
+        
+            const update = () => btnBlock.style.display = mtg == null ? 'none' : 'block'
+        
+            txt.addEventListener('input', () => {
+                const match = txt.value.match(/zoom\.us\/j\/(\d+).+?pwd=(\w+)/)
+                if (!match) {
+                    mtg = null
+                    return update()
+                }
+                mtg = `zoommtg://zoom.us/join?action=join&confno=${match[1]}&pwd=${match[2]}`
+                document.getElementById("meeting-id").value = `${match[1]}`;
+                document.getElementById("meeting-password").value = `${match[2]}`
+                update()
+            })
+        </script>
+    </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "zoomnamechange",
+  "version": "1.0.0",
+  "description": "Zoom Name Changer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package-win": "electron-packager . ZoomNameChange --overwrite --platform=win32 --icon=icon/ico.ico --prune=true --out=release-builds --version-string.CompanyName=TRSC25 --version-string.FileDescription=Change_your_Zoom_name --version-string.ProductName=Zoom_Name_Change",
+    "package-linux": "electron-packager . ZoomNameChange --overwrite --platform=linux --arch=x64 --icon=icon/ico.ico --prune=true --out=release-builds"
+  },
+  "repository": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "keywords": [
+    "zoom",
+    "name",
+    "change"
+  ],
+  "author": "TRSC25",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^16.0.5",
+    "electron-packager": "^15.4.0"
+  }
+}
