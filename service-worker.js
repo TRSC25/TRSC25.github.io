@@ -1,4 +1,4 @@
-const cacheName = "v2-BrandNewHomePage";
+const cacheName = "v2-UninstallServiceWorker";
 
 const appShellFiles = [
   //service worker essentials
