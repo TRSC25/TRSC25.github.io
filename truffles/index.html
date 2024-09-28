@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    function detectColorScheme() {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        } else {
+            return 'light';
+        }
+    }
+
+    // Function to update HTML tag with data-bs-theme attribute
+    function updateThemeAttribute() {
+        const colorScheme = detectColorScheme();
+        const htmlTag = document.getElementsByTagName('html')[0];
+        htmlTag.setAttribute('data-bs-theme', colorScheme);
+    }
+
+    // Call the function on page load
+    window.onload = updateThemeAttribute;
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap demo</title>
+  <!-- Bootstrap CSS -->
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .list-group {
+      display: inline-block; /* Display list groups side by side */
+      vertical-align: top; /* Align list groups at the top */
+      margin-right: 10px; /* Optional: Adds space between list groups */
+      width: 300px; /* Force width to a specific value */
+    }
+    .list-group:last-child {
+      margin-right: 0; /* Remove margin from the last list group */
+    }
+    .overflow-x-scroll {
+      overflow-x: scroll; /* Enable horizontal scrolling */
+      white-space: nowrap; /* Prevents wrapping of content */
+    }
+  </style>
+</head>
+<body>
+  <!-- New Group Model -->
+<div class="modal fade" id="newGroupModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="newGroupTitle" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="newGroupTitle">Create New Group</h1>
+      </div>
+      <div class="modal-body">
+        <label for="groupNameInput" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="groupNameInput">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="addListButton">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Item Model -->
+<div class="modal fade" id="newItemModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="newItemTitle" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="newItemTitle">Create New Item</h1>
+      </div>
+      <div class="modal-body">
+        <label for="itemNameInput" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="itemNameInput">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="addListButton">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <section class="py-2 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-10 mx-auto">
+        <h1 class="fw-light">Truffle</h1>
+        <p class="lead text-muted">A way for students to organize stuff</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="overflow-x-scroll">
+      <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newGroupModel">Add Group</button>      
+      <button id="convertToJsonButton" class="btn btn-secondary mb-3">Convert to JSON</button>
+      <button id="recreateFromJsonButton" class="btn btn-success mb-3">Recreate from JSON</button>
+      <button id="addBoardButton" class="btn btn-info mb-3">Add New Board</button>
+
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Board</button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0"><div class="list-groups-container overflow-x-scroll">
+          <!-- Initial list groups will be dynamically added -->
+          </div>
+        </div>
+      </div>
+      
+    </div>
+ </div>
+  <!-- Bootstrap JS and dependencies -->
+  <script src="../js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // JavaScript to handle adding a new board
+document.getElementById('addBoardButton').addEventListener('click', function() {
+  var tabList = document.getElementById('myTab');
+  var tabContent = document.getElementById('myTabContent');
+
+  // Generate unique ID for new board
+  var newBoardId = 'board-' + (tabList.children.length + 1);
+
+  // Create new tab button
+  var tabButton = document.createElement('button');
+  tabButton.classList.add('nav-link');
+  tabButton.setAttribute('id', newBoardId + '-tab');
+  tabButton.setAttribute('data-bs-toggle', 'tab');
+  tabButton.setAttribute('data-bs-target', '#' + newBoardId + '-tab-pane');
+  tabButton.setAttribute('type', 'button');
+  tabButton.setAttribute('role', 'tab');
+  tabButton.setAttribute('aria-controls', newBoardId + '-tab-pane');
+  tabButton.setAttribute('aria-selected', 'false');
+  tabButton.textContent = 'Board ' + (tabList.children.length + 1);
+
+  // Create new tab content pane
+  var tabPane = document.createElement('div');
+  tabPane.classList.add('tab-pane', 'fade');
+  tabPane.setAttribute('id', newBoardId + '-tab-pane');
+  tabPane.setAttribute('role', 'tabpanel');
+  tabPane.setAttribute('aria-labelledby', newBoardId + '-tab');
+  tabPane.setAttribute('tabindex', '0');
+
+  var listGroupsContainer = document.createElement('div');
+  listGroupsContainer.classList.add('list-groups-container', 'overflow-x-scroll');
+  // Initial list groups will be dynamically added here
+
+  tabPane.appendChild(listGroupsContainer);
+
+  tabList.appendChild(tabButton);
+  tabContent.appendChild(tabPane);
+
+  // Activate the newly added tab
+  var bsTab = new bootstrap.Tab(tabButton);
+  bsTab.show();
+});
+
+// JavaScript to handle adding new items to active list
+function addNewItem(button) {
+  var listItem = button.closest('.list-group-item');
+  var newItem = document.createElement('li');
+  newItem.classList.add('list-group-item');
+  bootstrap.Modal.getInstance(document.getElementById("newItemModel")).show();
+  newItem.textContent = prompt("Please enter item name");
+  listItem.parentNode.insertBefore(newItem, listItem.nextSibling);
+}
+
+// JavaScript to handle adding new list groups
+document.getElementById('addListButton').addEventListener('click', function() {
+  var activeTabPane = document.querySelector('.tab-pane.active .list-groups-container');
+
+  var newListGroup = document.createElement('ul');
+  newListGroup.classList.add('list-group');
+
+  var activeItem = document.createElement('li');
+  activeItem.classList.add('list-group-item', 'active');
+  activeItem.setAttribute('aria-current', 'true');
+  activeItem.textContent = groupNameInput.value;
+  bootstrap.Modal.getInstance(document.getElementById("newGroupModel")).hide();
+
+  var addButton = document.createElement('button');
+  addButton.type = 'button';
+  addButton.classList.add('btn', 'btn-primary', 'add-item-btn');
+  addButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg>';
+  addButton.addEventListener('click', function() {
+    addNewItem(this);
+  });
+
+  activeItem.appendChild(addButton);
+  newListGroup.appendChild(activeItem);
+
+  activeTabPane.appendChild(newListGroup);
+});
+
+// JavaScript to convert list groups of active board to JSON
+document.getElementById('convertToJsonButton').addEventListener('click', function() {
+  var activeTabPane = document.querySelector('.tab-pane.active .list-groups-container');
+  var listGroups = activeTabPane.getElementsByClassName('list-group');
+  var data = [];
+
+  Array.from(listGroups).forEach(function(listGroup) {
+    var groupName = listGroup.querySelector('.active').textContent; // Get the group name
+    var items = listGroup.getElementsByClassName('list-group-item');
+    var itemList = [];
+
+    Array.from(items).forEach(function(item) {
+      if (!item.classList.contains('active')) { // Exclude active item with button
+        itemList.push(item.textContent);
+      }
+    });
+
+    data.push({
+      group: groupName,
+      items: itemList
+    });
+  });
+
+  var json = JSON.stringify(data, null, 2); // Format JSON for readability
+  alert(json);
+});
+
+// JavaScript to recreate list groups from JSON of active board
+document.getElementById('recreateFromJsonButton').addEventListener('click', function() {
+  var jsonData = prompt("Paste your JSON here:");
+  if (!jsonData) return; // If user cancels or inputs empty data, exit
+
+  try {
+    var data = JSON.parse(jsonData);
+
+    // Clear existing list groups of active board
+    var activeTabPane = document.querySelector('.tab-pane.active .list-groups-container');
+    activeTabPane.innerHTML = '';
+
+    // Create list groups from JSON data of active board
+    data.forEach(function(groupData) {
+      var newListGroup = document.createElement('ul');
+      newListGroup.classList.add('list-group');
+
+      var activeItem = document.createElement('li');
+      activeItem.classList.add('list-group-item', 'active');
+      activeItem.setAttribute('aria-current', 'true');
+      activeItem.textContent = groupData.group;
+
+      var addButton = document.createElement('button');
+      addButton.type = 'button';
+      addButton.classList.add('btn', 'btn-primary', 'add-item-btn');
+      addButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg>';
+      addButton.addEventListener('click', function() {
+        addNewItem(this);
+      });
+
+      activeItem.appendChild(addButton);
+      newListGroup.appendChild(activeItem);
+
+      var items = groupData.items;
+      items.forEach(function(itemName) {
+        var newItem = document.createElement('li');
+        newItem.classList.add('list-group-item');
+        newItem.textContent = itemName;
+        newListGroup.appendChild(newItem);
+      });
+
+      activeTabPane.appendChild(newListGroup);
+    });
+
+    alert("List groups recreated successfully!");
+  } catch (error) {
+    alert("Error parsing JSON data. Please check your input.");
+  }
+});
+
+  </script>
+</body>
+</html>
+
