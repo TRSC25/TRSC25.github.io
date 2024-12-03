@@ -42,14 +42,8 @@ function createCard(title, text, buttons, imageUrl) {
         btnGroup.appendChild(button);
     }
 
-    // Add a small element for time (you can customize this)
-    const timeSmall = document.createElement('small');
-    timeSmall.className = 'text-body-secondary';
-    timeSmall.textContent = '9 mins';
-
     // Append everything to the card
     buttonGroupDiv.appendChild(btnGroup);
-    buttonGroupDiv.appendChild(timeSmall);
     cardBodyDiv.appendChild(cardTitle);
     cardBodyDiv.appendChild(cardText);
     cardBodyDiv.appendChild(buttonGroupDiv);
@@ -59,3 +53,6 @@ function createCard(title, text, buttons, imageUrl) {
 
     return colDiv;
 }
+
+var c = createCard("Percentage Calculator", "Calculates your percentage", {"Visit" :"./percentage-calculator/"}, "./previews/percentage.png");
+document.getElementById("shitContainer").appendChild(c);
