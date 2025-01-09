@@ -41,14 +41,11 @@ function createCard(title, text, buttons) {
     cardBodyDiv.appendChild(cardTitle);
     cardBodyDiv.appendChild(cardText);
     cardBodyDiv.appendChild(buttonGroupDiv);
-    cardDiv.appendChild(img);  // Append image to the card
     cardDiv.appendChild(cardBodyDiv);
     colDiv.appendChild(cardDiv);
 
     return colDiv;
 }
 
-var c = createCard("Percentage Calculator", "Calculates your percentage", {"Visit" :"./percentage-calculator/"},);
-document.getElementById("shitContainer").appendChild(c);
-c = createCard("Clock", "Its a clock, what more do you need", {"Visit" :"./clock/"},);
-document.getElementById("shitContainer").appendChild(c);
+document.getElementById("shitContainer").appendChild(createCard("Percentage Calculator", "Calculates your percentage", {"Visit" :"./percentage-calculator/"},));
+document.getElementById("shitContainer").appendChild(createCard("Clock", "Its a clock, what more do you need", {"Visit" :"./clock/"},));
