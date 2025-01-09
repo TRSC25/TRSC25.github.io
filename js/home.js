@@ -1,16 +1,10 @@
-function createCard(title, text, buttons, imageUrl) {
+function createCard(title, text, buttons) {
     // Create the main card container
     const colDiv = document.createElement('div');
     colDiv.className = 'col';
 
     const cardDiv = document.createElement('div');
     cardDiv.className = 'card shadow-sm';
-
-    // Create the card image
-    const img = document.createElement('img');
-    img.className = 'card-img-top';
-    img.src = imageUrl || 'https://via.placeholder.com/1000x225'; // Default placeholder image
-    img.alt = 'Card image';
 
     // Create the card body
     const cardBodyDiv = document.createElement('div');
@@ -54,5 +48,7 @@ function createCard(title, text, buttons, imageUrl) {
     return colDiv;
 }
 
-var c = createCard("Percentage Calculator", "Calculates your percentage", {"Visit" :"./percentage-calculator/"}, "./previews/percentage.png");
+var c = createCard("Percentage Calculator", "Calculates your percentage", {"Visit" :"./percentage-calculator/"},);
+document.getElementById("shitContainer").appendChild(c);
+c = createCard("Clock", "Its a clock, what more do you need", {"Visit" :"./clock/"},);
 document.getElementById("shitContainer").appendChild(c);
